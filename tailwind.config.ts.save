@@ -1,0 +1,34 @@
+
+
+// tailwind.config.ts
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          DEFAULT: '#0B3B76',  // navbar blue
+          600: '#0F4A8A',
+          700: '#093263',
+          800: '#07264D',
+          900: '#041A36',
+        },
+        accent: '#FFD166',     // slug yellow (for buttons/highlights)
+      },
+      boxShadow: {
+        card: '0 8px 24px rgba(0,0,0,0.08)',
+      },
+      borderRadius: {
+        xl: '14px',
+        '2xl': '20px',
+      },
+    },
+  },
+  plugins: [],
+}
+export default config
+
