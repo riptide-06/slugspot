@@ -1,160 +1,156 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function SignupPage() {
-  const router = useRouter()
-  const [fullName, setFullName] = useState('')
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirm, setConfirm] = useState('')
-  const [msg, setMsg] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setMsg(null)
+  // form state
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [err, setErr] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
-    if (!email.endsWith('@ucsc.edu')) return setMsg('Please use your @ucsc.edu email')
-    if (password !== confirm) return setMsg('Passwords do not match')
-    if (username.trim().length < 2) return setMsg('Username must be at least 2 characters')
+  // if already logged in, bounce to listings
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (mounted && data.user) router.replace('/listings');
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
 
-    setLoading(true)
-    // 1) Create auth user
+  async function handleSignup(e: React.FormEvent) {
+    e.preventDefault();
+    setErr(null);
+
+    // basic validation
+    if (!fullName.trim()) return setErr('please enter your full name.');
+    if (!email.trim()) return setErr('please enter your email.');
+    if (!email.toLowerCase().endsWith('@ucsc.edu')) {
+      return setErr('use your ucsc.edu email to sign up.');
+    }
+    if (password.length < 6) return setErr('password must be at least 6 characters.');
+    if (password !== confirm) return setErr('passwords do not match.');
+
+    setBusy(true);
+
+    // sign up with metadata (full_name)
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: email.trim(),
       password,
-      // you can also include user_metadata here if you want
-    })
+      options: {
+        data: { full_name: fullName.trim() },
+      },
+    });
+
+    setBusy(false);
+
     if (error) {
-      setLoading(false)
-      return setMsg(error.message)
+      setErr(error.message);
+      return;
     }
 
-    const authed = data.user
-    if (!authed) {
-      setLoading(false)
-      return setMsg('Sign up succeeded—check your email to continue.')
+    // If email confirmation is ON, Supabase returns user=null and sends a verification email.
+    // If confirmation is OFF (dev), user is immediately logged in.
+    if (!data.user) {
+      // confirmation flow
+      router.replace('/login?checkEmail=1');
+      return;
     }
 
-    // 2) Save profile (requires RLS policy: insert/update where id = auth.uid())
-    await supabase
-      .from('users')
-      .upsert(
-        { id: authed.id, full_name: fullName.trim(), email, username: username.trim() },
-        { onConflict: 'id' }
-      )
-
-    setLoading(false)
-    router.push('/')
-    router.refresh()
+    // logged in (dev) → go to listings
+    router.replace('/listings');
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-2xl shadow-card border border-slate-200 overflow-hidden">
-        {/* Left: form */}
-        <div className="p-8">
-          <h1 className="text-2xl font-bold">Sign up</h1>
-          <p className="text-sm text-slate-600 mt-1">Create your account to post and review listings.</p>
+    <div className="mx-auto max-w-5xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* form card */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
+          <h1 className="text-xl font-semibold">sign up</h1>
+          <p className="mt-1 text-sm text-slate-600">use your ucsc.edu email.</p>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <form onSubmit={handleSignup} className="mt-4 space-y-4">
             <div>
-              <label className="block text-sm text-slate-700 mb-1">Full name</label>
+              <label className="text-sm font-medium">full name</label>
               <input
+                type="text"
                 value={fullName}
-                onChange={(e) => setFullName(e.currentTarget.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B3B76]"
-                required
+                onChange={(e) => setFullName(e.target.value)}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-slate-50 px-3 py-2"
+                placeholder="Sam Slug"
+                autoComplete="name"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-slate-700 mb-1">UCSC email</label>
+              <label className="text-sm font-medium">ucsc email</label>
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.currentTarget.value)}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-slate-50 px-3 py-2"
                 placeholder="you@ucsc.edu"
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B3B76]"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm text-slate-700 mb-1">Username</label>
-              <input
-                value={username}
-                onChange={(e) => setUsername(e.currentTarget.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B3B76]"
-                required
+                autoComplete="email"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-slate-700 mb-1">Password</label>
+                <label className="text-sm font-medium">password</label>
                 <input
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.currentTarget.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B3B76]"
-                  required
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-slate-50 px-3 py-2"
+                  autoComplete="new-password"
                 />
               </div>
               <div>
-                <label className="block text-sm text-slate-700 mb-1">Confirm password</label>
+                <label className="text-sm font-medium">confirm password</label>
                 <input
                   type="password"
                   value={confirm}
-                  onChange={(e) => setConfirm(e.currentTarget.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0B3B76]"
-                  required
+                  onChange={(e) => setConfirm(e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-slate-50 px-3 py-2"
+                  autoComplete="new-password"
                 />
               </div>
             </div>
 
+            {err && <p className="text-sm text-red-600">{err}</p>}
+
             <button
               type="submit"
-              disabled={loading}
-              className="w-full rounded-lg bg-[#FFD166] text-slate-900 py-2 font-medium disabled:opacity-50"
+              disabled={busy}
+              className="w-full rounded-md bg-brand text-white px-4 py-2 font-medium disabled:opacity-60"
             >
-              {loading ? 'Creating account…' : 'Create account'}
+              {busy ? 'creating account…' : 'create account'}
             </button>
 
-            {msg && <p className="text-sm text-red-600">{msg}</p>}
+            <p className="text-sm text-slate-600">
+              already have an account?{' '}
+              <a href="/login" className="underline">log in</a>
+            </p>
           </form>
-
-          <p className="text-sm text-slate-600 mt-6">
-            Already have an account?{' '}
-            <Link href="/login" className="text-[#0B3B76] underline">Log in</Link>
-          </p>
         </div>
 
-        {/* Right: brand panel */}
-        <div className="bg-[#0B3B76] text-white p-8 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded bg-white/20 grid place-items-center text-xl">🦪</div>
-              <div className="text-2xl font-semibold">SlugSpot</div>
-            </div>
-            <p className="mt-4 text-white/90">
-              Trusted reviews and listings, verified by @ucsc.edu accounts only. Join the hive 🐌📍
-            </p>
-          </div>
-          <div className="text-xs text-white/70">For Students, By Students.</div>
+        {/* right card */}
+        <div className="rounded-2xl border border-slate-200 bg-[#0B3B76] text-white p-6 shadow-card">
+          <h2 className="text-xl font-semibold">SlugSpot</h2>
+          <p className="mt-2 text-sm text-white/90">
+            find the best coffee, study spots, and services around ucsc — verified by students.
+          </p>
+          <p className="mt-6 text-xs text-white/80">for students, by students.</p>
         </div>
       </div>
-    </main>
-  )
+    </div>
+  );
 }
 

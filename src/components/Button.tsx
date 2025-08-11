@@ -1,43 +1,29 @@
-// src/components/Button.tsx
-import React from "react";
+import { ButtonHTMLAttributes, forwardRef } from "react";
 import clsx from "clsx";
 
-type ButtonProps = {
-  children: React.ReactNode;
-  variant?: "primary" | "secondary" | "outline";
+type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: "primary" | "secondary" | "ghost";
   size?: "sm" | "md";
-  className?: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+};
 
-export default function Button({
-  children,
-  variant = "primary",
-  size = "md",
-  className,
-  ...props
-}: ButtonProps) {
-  const baseStyles =
-    "inline-flex items-center justify-center font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 transition";
-
+const Button = forwardRef<HTMLButtonElement, Props>(function Button(
+  { className, variant = "primary", size = "md", ...props },
+  ref
+) {
+  const base = "inline-flex items-center justify-center rounded-md font-medium transition disabled:opacity-60";
   const variants = {
-    primary: "bg-brand text-white hover:bg-brand/90 focus:ring-brand",
-    secondary: "bg-secondary text-black hover:bg-secondary/90 focus:ring-secondary",
-    outline:
-      "border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 focus:ring-brand",
+    primary: "bg-brand text-white hover:opacity-95",
+    secondary: "border border-slate-300 bg-white text-slate-900 hover:bg-slate-50",
+    ghost: "text-slate-700 hover:bg-slate-100",
   };
-
   const sizes = {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-4 py-2 text-base",
+    sm: "text-sm px-3 py-1.5",
+    md: "text-sm px-4 py-2",
   };
-
   return (
-    <button
-      className={clsx(baseStyles, variants[variant], sizes[size], className)}
-      {...props}
-    >
-      {children}
-    </button>
+    <button ref={ref} className={clsx(base, variants[variant], sizes[size], className)} {...props} />
   );
-}
+});
+
+export default Button;
 

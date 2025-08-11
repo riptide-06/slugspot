@@ -23,10 +23,7 @@ export default function MarketingHero() {
         </p>
 
         <div className="mt-4 flex items-center justify-center gap-3">
-          <Link
-            href="/signup"
-            className="rounded-md bg-white text-brand px-5 py-2 font-medium shadow-card"
-          >
+          <Link href="/signup" className="rounded-md bg-white text-brand px-5 py-2 font-medium shadow-card">
             Get Started
           </Link>
           <span className="hidden sm:inline text-white/80 text-sm">

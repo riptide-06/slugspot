@@ -10,9 +10,7 @@ type Props = {
   defaultValue?: string;
   className?: string;
   suggestions?: Suggestion[] | null | undefined;
-
-  // NEW: require login for searching
-  requireAuth?: boolean;
+  requireAuth?: boolean; // gate search for logged-out
 };
 
 export default function SearchBar({
@@ -23,20 +21,17 @@ export default function SearchBar({
   requireAuth = false,
 }: Props) {
   const sp = useSearchParams();
-  const pathname = usePathname();
   const router = useRouter();
 
   const [value, setValue] = useState(defaultValue ?? sp.get("q") ?? "");
   const [user, setUser] = useState<any>(null);
   const [showAuthMsg, setShowAuthMsg] = useState(false);
 
-  // keep input synced with URL/back-forward
   useEffect(() => {
     setValue(defaultValue ?? sp.get("q") ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sp]);
 
-  // get current user
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -50,7 +45,6 @@ export default function SearchBar({
   }, []);
 
   function goTo(q: string) {
-    // Always search on the dedicated listings page
     const params = new URLSearchParams();
     if (q.trim()) params.set("q", q.trim());
     router.push(`/listings?${params.toString()}`);
@@ -88,7 +82,6 @@ export default function SearchBar({
         </button>
       </form>
 
-      {/* optional suggestions */}
       {safeSuggestions.length > 0 && (
         <ul className="mt-2 space-y-1">
           {safeSuggestions.map((s) => (
@@ -103,23 +96,12 @@ export default function SearchBar({
         </ul>
       )}
 
-      {/* Auth gate message */}
       {showAuthMsg && !user && requireAuth && (
         <div className="mt-2 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">
           Log in with your <strong>ucsc.edu</strong> email to search.
           <div className="mt-2 flex gap-2">
-            <a
-              href="/login"
-              className="rounded-md bg-brand text-white px-3 py-1 text-sm"
-            >
-              Log in
-            </a>
-            <a
-              href="/signup"
-              className="rounded-md border border-slate-300 bg-white px-3 py-1 text-sm"
-            >
-              Sign up
-            </a>
+            <a href="/login" className="rounded-md bg-brand text-white px-3 py-1 text-sm">Log in</a>
+            <a href="/signup" className="rounded-md border border-slate-300 bg-white px-3 py-1 text-sm">Sign up</a>
           </div>
         </div>
       )}

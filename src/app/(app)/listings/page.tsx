@@ -112,12 +112,12 @@ export default function ListingsPage() {
     )
   }, [items, q, sort])
 
-  // not logged in view (inside the 2‑col layout so the sidebar still shows)
+  // not logged in view (with sidebar layout)
   if (!user) {
     return (
       <div className="px-4 sm:px-6 lg:px-8 py-6">
-        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-[240px,1fr] lg:grid-cols-[256px,1fr] gap-6">
-          <Sidebar />
+        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-[256px,1fr] gap-6">
+          <div className="hidden md:block"><Sidebar variant="desktop" /></div>
           <section className="space-y-4">
             <h1 className="text-xl sm:text-2xl font-bold">listings</h1>
             <div className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3">
@@ -141,8 +141,8 @@ export default function ListingsPage() {
   // logged-in view
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6">
-      <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-[240px,1fr] lg:grid-cols-[256px,1fr] gap-6">
-        <Sidebar />
+      <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-[256px,1fr] gap-6">
+        <div className="hidden md:block"><Sidebar variant="desktop" /></div>
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h1 className="text-xl sm:text-2xl font-bold">listings</h1>
@@ -183,11 +183,7 @@ export default function ListingsPage() {
           {q && (
             <p className="text-xs sm:text-sm text-slate-500">
               search: “{q}” — {filtered.length} result{filtered.length !== 1 ? 's' : ''}
-              <button
-                className="ml-2 underline"
-                onClick={() => router.push('/listings')}
-                aria-label="clear search"
-              >
+              <button className="ml-2 underline" onClick={() => router.push('/listings')} aria-label="clear search">
                 clear
               </button>
             </p>
@@ -204,20 +200,13 @@ export default function ListingsPage() {
           {!loading && !err && filtered.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {filtered.map(it => (
-                <article
-                  key={it.id}
-                  className="bg-white rounded-2xl shadow-card hover:shadow-lg transition overflow-hidden border border-slate-100"
-                >
+                <article key={it.id} className="bg-white rounded-2xl shadow-card hover:shadow-lg transition overflow-hidden border border-slate-100">
                   <div className="h-32 sm:h-36 w-full bg-slate-200" />
                   <div className="p-4 sm:p-5 space-y-2">
                     <h3 className="text-base sm:text-lg font-semibold leading-snug">
-                      <Link href={`/listings/${it.id}`} className="hover:underline">
-                        {it.title}
-                      </Link>
+                      <Link href={`/listings/${it.id}`} className="hover:underline">{it.title}</Link>
                     </h3>
-                    <p className="text-[13px] sm:text-sm text-slate-600 line-clamp-3">
-                      {it.description}
-                    </p>
+                    <p className="text-[13px] sm:text-sm text-slate-600 line-clamp-3">{it.description}</p>
                     <div className="flex items-center justify-between pt-2 text-sm">
                       <div className="flex items-center gap-2 text-slate-600">
                         <Avatar name={it.author_full_name || it.author_email || 'User'} size={28} />

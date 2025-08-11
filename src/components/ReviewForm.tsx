@@ -1,118 +1,76 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
-interface ReviewFormProps {
-  listingId: string
-  userId: string
-  onSubmitted?: () => void
-}
+import { useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function ReviewForm({
   listingId,
-  userId,
   onSubmitted,
-}: ReviewFormProps) {
-  const [rating, setRating] = useState(0)
-  const [comment, setComment] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+}: { listingId: string; onSubmitted?: () => void }) {
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setErr(null);
+    setBusy(true);
 
-    // 1) insert the new review
-    const { error: revError } = await supabase
-      .from('reviews')
-      .insert({
-        listing_id: listingId,
-        user_id: userId,
-        rating,
-        comment,
-      })
-
-    if (revError) {
-      setError(revError.message)
-      setLoading(false)
-      return
+    const { data } = await supabase.auth.getUser();
+    const user = data.user;
+    if (!user) {
+      setErr("log in with your ucsc.edu email to post a review.");
+      setBusy(false);
+      return;
     }
 
-    // 2) award points via RPC
-    const { error: rpcError } = await supabase.rpc(
-      'increment_user_points',
-      {
-        p_user_id: userId,
-        p_points: 5, // adjust award as desired
-      }
-    )
+    const { error } = await supabase.from("reviews").insert({
+      listing_id: listingId,
+      user_id: user.id,
+      rating,
+      comment: comment.trim() || null,
+    });
 
-    if (rpcError) {
-      setError(rpcError.message)
-    }
+    setBusy(false);
+    if (error) return setErr(error.message);
 
-    setLoading(false)
-    setRating(0)
-    setComment('')
-    onSubmitted?.()
+    setRating(5);
+    setComment("");
+    onSubmitted?.();
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-md mx-auto space-y-4 p-4 border rounded"
-    >
-      {error && (
-        <div className="text-red-600 text-sm">
-          {error}
-        </div>
-      )}
-
-      <div>
-        <label className="block mb-1 font-medium">Your Rating</label>
+    <form onSubmit={submit} className="rounded-2xl border border-slate-200 bg-white p-4 space-y-3">
+      <div className="flex items-center gap-3">
+        <label className="text-sm font-medium">rating</label>
         <select
           value={rating}
-          onChange={e => setRating(+e.currentTarget.value)}
-          required
-          className="border rounded p-2 w-full"
+          onChange={(e) => setRating(Number(e.target.value))}
+          className="rounded-md border border-slate-300 bg-slate-50 px-2 py-1 text-sm"
         >
-          <option value={0} disabled>
-            Select…
-          </option>
-          {[1, 2, 3, 4, 5].map(n => (
-            <option key={n} value={n}>
-              {'★'.repeat(n)}{'☆'.repeat(5 - n)}
-            </option>
-          ))}
+          {[5,4,3,2,1].map(n => <option key={n} value={n}>{n}</option>)}
         </select>
       </div>
 
-      <div>
-        <label className="block mb-1 font-medium">Comment</label>
-        <textarea
-          value={comment}
-          onChange={e => setComment(e.currentTarget.value)}
-          required
-          rows={4}
-          className="border rounded p-2 w-full"
-        />
-      </div>
+      <textarea
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        placeholder="share a quick thought…"
+        className="w-full rounded-md border border-slate-300 bg-slate-50 px-3 py-2 text-sm"
+        rows={3}
+      />
+
+      {err && <p className="text-sm text-red-600">{err}</p>}
 
       <button
         type="submit"
-        disabled={loading}
-        className="w-full py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+        disabled={busy}
+        className="rounded-md bg-brand text-white px-4 py-2 text-sm font-medium disabled:opacity-60"
       >
-        {loading ? 'Submitting…' : 'Submit Review'}
+        {busy ? "posting…" : "post review"}
       </button>
     </form>
-  )
+  );
 }
 
