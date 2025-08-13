@@ -43,18 +43,18 @@ export default function LoginPage() {
       <div className="mx-auto max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
         <form onSubmit={onSubmit} className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
           <h1 className="text-xl font-semibold">Log in</h1>
-          <p className="text-sm text-slate-600">Get verified to leave reviews and suggestions.</p>
+          <p className="text-sm text-slate-600">Sign in to leave reviews and suggestions.</p>
 
           {err && <p className="text-sm text-red-600">{err}</p>}
 
           <label className="block text-sm">
-            <span className="text-slate-700">UCSC email</span>
+            <span className="text-slate-700">Email</span>
             <input
               type="email"
               className="mt-1 w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="sp@ucsc.edu"
+              placeholder="you@example.com"
               required
             />
           </label>
@@ -88,9 +88,9 @@ export default function LoginPage() {
         <div className="rounded-2xl bg-brand text-white p-6">
           <h2 className="text-lg font-semibold">SlugSpot</h2>
           <p className="mt-2 text-white/90">
-            Find the best coffee, study spots, and services around UCSC — verified by students.
+            Find the best coffee, study spots, and services around campus — verified by students.
           </p>
-          <p className="mt-6 text-sm text-white/80">For Students, By Students.</p>
+          <p className="mt-6 text-sm text-white/80">For Everyone, By Everyone.</p>
         </div>
       </div>
     </section>

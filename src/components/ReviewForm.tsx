@@ -20,7 +20,7 @@ export default function ReviewForm({
     const { data } = await supabase.auth.getUser();
     const user = data.user;
     if (!user) {
-      setErr("log in with your ucsc.edu email to post a review.");
+      setErr("log in to post a review.");
       setBusy(false);
       return;
     }

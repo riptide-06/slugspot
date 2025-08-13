@@ -122,7 +122,7 @@ export default function ListingsPage() {
             <h1 className="text-xl sm:text-2xl font-bold">listings</h1>
             <div className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3">
               <p className="text-amber-900 text-sm">
-                log in with your <b>ucsc.edu</b> email to search and view listings.
+                log in to search and view listings.
               </p>
               <div className="mt-3 flex gap-2">
                 <a href="/login" className="rounded-md bg-brand text-white px-4 py-2 text-sm">log in</a>

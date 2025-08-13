@@ -146,7 +146,7 @@ export default function ListingDetailPage() {
           </div>
         ) : (
           <p className="text-sm text-slate-600">
-            log in with your <b>ucsc.edu</b> email to leave a review.
+            log in to leave a review.
           </p>
         )}
       </section>

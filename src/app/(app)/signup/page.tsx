@@ -32,9 +32,6 @@ export default function SignupPage() {
     // basic validation
     if (!fullName.trim()) return setErr('please enter your full name.');
     if (!email.trim()) return setErr('please enter your email.');
-    if (!email.toLowerCase().endsWith('@ucsc.edu')) {
-      return setErr('use your ucsc.edu email to sign up.');
-    }
     if (password.length < 6) return setErr('password must be at least 6 characters.');
     if (password !== confirm) return setErr('passwords do not match.');
 
@@ -90,13 +87,13 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">ucsc email</label>
+              <label className="text-sm font-medium">email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 w-full rounded-md border border-slate-300 bg-slate-50 px-3 py-2"
-                placeholder="you@ucsc.edu"
+                placeholder="you@example.com"
                 autoComplete="email"
               />
             </div>
@@ -145,9 +142,9 @@ export default function SignupPage() {
         <div className="rounded-2xl border border-slate-200 bg-[#0B3B76] text-white p-6 shadow-card">
           <h2 className="text-xl font-semibold">SlugSpot</h2>
           <p className="mt-2 text-sm text-white/90">
-            find the best coffee, study spots, and services around ucsc — verified by students.
+            find the best coffee, study spots, and services around campus — verified by students.
           </p>
-          <p className="mt-6 text-xs text-white/80">for students, by students.</p>
+          <p className="mt-6 text-xs text-white/80">for everyone, by everyone.</p>
         </div>
       </div>
     </div>

@@ -98,7 +98,7 @@ export default function SearchBar({
 
       {showAuthMsg && !user && requireAuth && (
         <div className="mt-2 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-          Log in with your <strong>ucsc.edu</strong> email to search.
+          Log in to search.
           <div className="mt-2 flex gap-2">
             <a href="/login" className="rounded-md bg-brand text-white px-3 py-1 text-sm">Log in</a>
             <a href="/signup" className="rounded-md border border-slate-300 bg-white px-3 py-1 text-sm">Sign up</a>

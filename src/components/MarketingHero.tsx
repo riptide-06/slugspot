@@ -27,7 +27,7 @@ export default function MarketingHero() {
             Get Started
           </Link>
           <span className="hidden sm:inline text-white/80 text-sm">
-            Create an account with your <b>ucsc.edu</b> email to explore
+            Create an account to explore
           </span>
         </div>
       </div>
