@@ -19,7 +19,7 @@ export default function MarketingHero() {
           SLUGSPOT: a campus compass, powered by slugs
         </h1>
         <p className="mt-2 text-white/90 text-sm sm:text-base">
-          find the best coffee, study spots, events all around you
+          find the best coffee, study spots, events all around campus — verified by UCSC students
         </p>
 
         <div className="mt-4 flex items-center justify-center gap-3">
@@ -27,7 +27,7 @@ export default function MarketingHero() {
             Get Started
           </Link>
           <span className="hidden sm:inline text-white/80 text-sm">
-            Create an account to explore
+            Sign up with your UCSC email to explore
           </span>
         </div>
       </div>
