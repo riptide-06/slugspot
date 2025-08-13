@@ -27,7 +27,7 @@ type Review = {
 export default function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [item, setItem] = useState<Detail | null>(null);
-  const [reviews, setReviews] = useState[<Review[]>]([]) as any; // TS quirk fix below
+  const [reviews, setReviews] = useState<Review[]>([]) as any; // TS quirk fix below
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
@@ -48,7 +48,10 @@ export default function ListingDetailPage() {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
       setUser(session?.user ?? null)
     );
-    return () => sub.subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   // load detail + reviews
