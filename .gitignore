@@ -19,3 +19,4 @@ out/
 *.log
 coverage/
 dist/
+.env
