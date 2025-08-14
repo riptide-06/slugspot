@@ -12,7 +12,7 @@ type Props = {
 
 const items = [
   { href: "/listings", label: "Dashboard", icon: "🏠" },
-  { href: "/map", label: "Interactive Map", icon: "🗺️" },
+  { href: "/(app)/map", label: "Interactive Map", icon: "🗺️" },
   { href: "/search", label: "Search & Questions", icon: "🔍" },
   { href: "/booking", label: "Book Services", icon: "📅" },
   { href: "/profile", label: "My Profile", icon: "👤" },
