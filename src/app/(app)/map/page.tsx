@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import GoogleMap from "@/components/GoogleMap";
-import RequireAuth from "@/components/RequireAuth";
 
 type MapLocation = {
   id: string;
@@ -23,8 +22,8 @@ export default function MapPage() {
   };
 
   return (
-    <RequireAuth>
-      <div className="space-y-6">
+    <div className="px-4 sm:px-6 lg:px-8 py-6">
+      <div className="mx-auto max-w-6xl space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Interactive Campus Map</h1>
@@ -142,6 +141,6 @@ export default function MapPage() {
           </div>
         </div>
       </div>
-    </RequireAuth>
+    </div>
   );
 }

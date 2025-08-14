@@ -40,6 +40,7 @@ export default function Header() {
         {!user ? (
           <nav className="flex items-center gap-4 text-sm">
             <Link href="/" className="hover:underline">Home</Link>
+            <Link href="/map" className="hover:underline">Map</Link>
             <Link href="/login" className="hover:underline">Log in</Link>
             <Link
               href="/signup"
