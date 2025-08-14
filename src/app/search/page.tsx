@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Search, TrendingUp, Clock, Users } from "lucide-react";
 import SearchBar from "@/components/SearchBar";
 import RequireAuth from "@/components/RequireAuth";
@@ -64,7 +64,7 @@ const popularSearches = [
   "Group study areas"
 ];
 
-export default function SearchPage() {
+function SearchContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [questions, setQuestions] = useState<Question[]>(trendingQuestions);
@@ -197,5 +197,13 @@ export default function SearchPage() {
         </div>
       </div>
     </RequireAuth>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="max-w-6xl mx-auto px-4 sm:px-6 py-8"><div className="text-center">Loading...</div></div>}>
+      <SearchContent />
+    </Suspense>
   );
 }

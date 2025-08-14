@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState, Suspense } from 'react'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import Avatar from '@/components/Avatar'
 import { supabase } from '@/lib/supabaseClient'
 
@@ -42,7 +42,7 @@ function SkeletonCard() {
   )
 }
 
-export default function ListingsPage() {
+function ListingsContent() {
   const [items, setItems] = useState<StatCard[]>([])
   const [loading, setLoading] = useState(true)
   const [err, setErr] = useState<string | null>(null)
@@ -241,5 +241,13 @@ export default function ListingsPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function ListingsPage() {
+  return (
+    <Suspense fallback={<div className="max-w-6xl mx-auto px-4 sm:px-6 py-8"><div className="text-center">Loading...</div></div>}>
+      <ListingsContent />
+    </Suspense>
   )
 }

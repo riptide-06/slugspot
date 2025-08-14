@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -20,17 +20,16 @@ export default function SearchBar({
   suggestions,
   requireAuth = false,
 }: Props) {
-  const sp = useSearchParams();
   const router = useRouter();
 
-  const [value, setValue] = useState(defaultValue ?? sp.get("q") ?? "");
+  const [value, setValue] = useState(defaultValue ?? "");
   const [user, setUser] = useState<any>(null);
   const [showAuthMsg, setShowAuthMsg] = useState(false);
 
   useEffect(() => {
-    setValue(defaultValue ?? sp.get("q") ?? "");
+    setValue(defaultValue ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sp]);
+  }, [defaultValue]);
 
   useEffect(() => {
     let mounted = true;
