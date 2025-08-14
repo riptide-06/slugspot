@@ -18,10 +18,10 @@ type MapLocation = {
 const sampleLocations: MapLocation[] = [
   {
     id: '1',
-    name: 'Stevenson Coffee House',
-    description: 'Popular coffee spot with great atmosphere',
-    lat: 36.9914,
-    lng: -122.0583,
+    name: 'Perk Coffee Bar',
+    description: 'Cozy coffee shop in downtown Santa Cruz',
+    lat: 36.9741,
+    lng: -122.0308,
     category: 'coffee',
     rating: 4.5,
     reviews: 23
@@ -38,9 +38,9 @@ const sampleLocations: MapLocation[] = [
   },
   {
     id: '3',
-    name: 'Kresge Garden',
-    description: 'Beautiful outdoor space for relaxation',
-    lat: 36.9889,
+    name: 'Porter Meadow',
+    description: 'Beautiful outdoor space for relaxation and events',
+    lat: 36.9856,
     lng: -122.0647,
     category: 'recreation',
     rating: 4.8,
@@ -48,23 +48,53 @@ const sampleLocations: MapLocation[] = [
   },
   {
     id: '4',
-    name: 'Cafe Iveta',
-    description: 'Off-campus coffee shop near downtown',
-    lat: 36.9741,
-    lng: -122.0308,
+    name: 'Stevenson Coffee House',
+    description: 'Popular on-campus coffee spot',
+    lat: 36.9914,
+    lng: -122.0583,
     category: 'coffee',
     rating: 4.3,
     reviews: 67
   },
   {
     id: '5',
-    name: 'Crown Dining Hall',
-    description: 'Campus dining with various food options',
-    lat: 36.9978,
+    name: 'Cowell Dining Hall',
+    description: 'All-you-can-eat dining with diverse options',
+    lat: 36.9956,
     lng: -122.0547,
     category: 'food',
     rating: 3.9,
     reviews: 89
+  },
+  {
+    id: '6',
+    name: 'McHenry Library',
+    description: 'Main campus library with extensive resources',
+    lat: 36.9989,
+    lng: -122.0583,
+    category: 'study',
+    rating: 4.1,
+    reviews: 156
+  },
+  {
+    id: '7',
+    name: 'Banana Joe\'s',
+    description: 'Fresh smoothies and healthy snacks',
+    lat: 36.9925,
+    lng: -122.0564,
+    category: 'food',
+    rating: 4.6,
+    reviews: 34
+  },
+  {
+    id: '8',
+    name: 'Student Health Center',
+    description: 'Campus medical and wellness services',
+    lat: 36.9967,
+    lng: -122.0531,
+    category: 'service',
+    rating: 4.0,
+    reviews: 78
   }
 ];
 

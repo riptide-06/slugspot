@@ -11,14 +11,12 @@ type Props = {
 }
 
 const items = [
-  { href: "/map", label: "Interactive Map" },
-  { href: "/questions", label: "Questions" },
-  { href: "/categories", label: "Categories" },
-  { href: "/favorites", label: "Favorite Spots" },
-  { href: "/history", label: "History" },
-  { href: "/my-spots", label: "Your Spots" },
-  { href: "/help", label: "Get Help" },
-  { href: "/about", label: "About" },
+  { href: "/listings", label: "Dashboard", icon: "🏠" },
+  { href: "/map", label: "Interactive Map", icon: "🗺️" },
+  { href: "/search", label: "Search & Questions", icon: "🔍" },
+  { href: "/booking", label: "Book Services", icon: "📅" },
+  { href: "/profile", label: "My Profile", icon: "👤" },
+  { href: "/payment", label: "Payment", icon: "💳" },
 ]
 
 export default function Sidebar({ variant = "desktop", onNavigate }: Props) {
@@ -69,7 +67,10 @@ export default function Sidebar({ variant = "desktop", onNavigate }: Props) {
                   : "text-slate-800 hover:bg-slate-100"
               )}
             >
-              {it.label}
+              <span className="flex items-center gap-2">
+                <span>{it.icon}</span>
+                {it.label}
+              </span>
             </Link>
           )
         })}

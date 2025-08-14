@@ -144,8 +144,24 @@ export default function ListingsPage() {
       <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-[256px,1fr] gap-6">
         <div className="hidden md:block"><Sidebar variant="desktop" /></div>
         <section className="space-y-4">
+          {/* Welcome Message for Dashboard */}
+          <div className="bg-gradient-to-r from-brand to-brand/80 text-white rounded-2xl p-6 shadow-card">
+            <h1 className="text-2xl font-bold mb-2">Welcome back! 👋</h1>
+            <p className="text-white/90 mb-4">
+              Discover the best spots on campus, connect with fellow students, and make the most of your UCSC experience.
+            </p>
+            <div className="flex gap-3">
+              <a href="/search" className="bg-white text-brand px-4 py-2 rounded-lg font-medium hover:opacity-90">
+                Ask a Question
+              </a>
+              <a href="/map" className="bg-white/20 text-white px-4 py-2 rounded-lg font-medium hover:bg-white/30">
+                Explore Map
+              </a>
+            </div>
+          </div>
+
           <div className="flex items-center justify-between">
-            <h1 className="text-xl sm:text-2xl font-bold">listings</h1>
+            <h2 className="text-xl sm:text-2xl font-bold">Campus Listings</h2>
             <div className="flex items-center gap-2 text-sm">
               <button
                 onClick={() => setSort('new')}
